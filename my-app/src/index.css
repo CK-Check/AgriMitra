@@ -1,70 +1,321 @@
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Updated color scheme for agricultural theme */
+  color-scheme: light;
+  color: #1f2937;
+  background-color: #f9fafb;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Custom CSS variables for consistent theming */
+  --primary-green: #16a34a;
+  --primary-green-light: #22c55e;
+  --primary-green-dark: #15803d;
+  --secondary-yellow: #facc15;
+  --accent-blue: #3b82f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --bg-light: #f9fafb;
+  --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* Custom animations for AgriMitra Dashboard */
+@keyframes fade-in {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
 }
-a:hover {
-  color: #535bf2;
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 2s infinite;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out;
+}
+
+@keyframes bounce-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 1s ease-in-out infinite;
+}
+
+@keyframes grow-progress {
+  from {
+    width: 0%;
+  }
+}
+
+.animate-grow-progress {
+  animation: grow-progress 1.5s ease-out;
+}
+
+/* Global styles for agricultural dashboard */
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* Typography improvements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: clamp(2.5rem, 5vw, 4rem);
   line-height: 1.1;
+  margin-bottom: 0.5rem;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  margin-bottom: 0.5rem;
+}
+
+p {
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* Links with agricultural theme */
+a {
   font-weight: 500;
+  color: var(--primary-green);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-green-dark);
+  text-decoration: underline;
+}
+
+/* Enhanced button styles for dashboard */
+button {
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  padding: 0.75em 1.5em;
+  font-size: 1rem;
+  font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--primary-green);
+  color: white;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-subtle);
+  position: relative;
+  overflow: hidden;
 }
+
 button:hover {
-  border-color: #646cff;
+  background-color: var(--primary-green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
 }
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid var(--primary-green-light);
+  outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: light) {
+/* Input styles for forms */
+input, textarea, select {
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* Custom scrollbar for dashboard */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green-dark);
+}
+
+/* Loading spinner for dashboard */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient backgrounds for sections */
+.bg-gradient-agricultural {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #facc15 100%);
+}
+
+.bg-gradient-subtle {
+  background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 100%);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    font-size: 14px;
   }
-  a:hover {
-    color: #747bff;
-  }
+  
   button {
-    background-color: #f9f9f9;
+    padding: 0.65em 1.2em;
+    font-size: 0.95rem;
   }
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 13px;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  button {
+    padding: 0.6em 1em;
+    font-size: 0.9rem;
+  }
+}
+
+/* Print styles for reports */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-green: #0f5f2f;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+  }
+  
+  button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Focus indicators for keyboard navigation */
+.focus-visible {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+.focus-visible:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
 }
