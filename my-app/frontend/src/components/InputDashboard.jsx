@@ -92,8 +92,35 @@ const ComprehensiveDashboard = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    
-    // Simulate comprehensive ML analysis
+
+    try {
+      const apiBase = import.meta?.env?.VITE_API_URL || 'http://localhost:3001';
+      const payload = {
+        potassium: Number(formData.potassium),
+        nitrogen: Number(formData.nitrogen),
+        phosphorus: formData.phosphorus === '' ? undefined : Number(formData.phosphorus),
+        pH: formData.pH === '' ? undefined : Number(formData.pH),
+      };
+
+      const resp = await fetch(`${apiBase}/api/soil-samples`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err?.error || 'Failed to save soil sample');
+      }
+
+      const saved = await resp.json();
+      console.log('Saved soil sample:', saved);
+    } catch (err) {
+      console.error(err);
+      setErrors(prev => ({ ...prev, submit: 'Failed to save soil data. Please try again.' }));
+    }
+
+    // Simulate comprehensive ML analysis (client-side demo)
     setTimeout(() => {
       const mockResults = {
         yieldPrediction: {
