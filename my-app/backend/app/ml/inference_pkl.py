@@ -3,7 +3,7 @@ from pathlib import Path
 import threading
 import pandas as pd
 
-_artifact_path = Path(__file__).parent.parent.parent / "artifacts" / "model.pkl"
+_artifact_path = Path(__file__).resolve().parent / "artifacts" / "best_yield_model.pkl"
 _model = None
 _lock = threading.Lock()
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .ml.inference_pkl import predict_one, FEATURES_COLUMNS
+from .inference_pkl import predict_one, FEATURES_COLUMNS
 
 ml_bp = Blueprint("ml", __name__, url_prefix="/api/ml")
 

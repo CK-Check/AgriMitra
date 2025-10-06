@@ -115,98 +115,58 @@ const ComprehensiveDashboard = () => {
 
       const saved = await resp.json();
       console.log('Saved soil sample:', saved);
+
+      const mlResp = await fetch(`${apiBase}/api/ml/predict`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          potassium: Number(formData.potassium),
+          nitrogen: Number(formData.nitrogen),
+          phosphorus: Number(formData.phosphorus || 0),
+          pH: Number(formData.pH || 7),
+        }),
+      });
+
+      const mlJson = await mlResp.json();
+      if (!mlResp.ok) {
+        throw new Error(mlJson?.error || 'Prediction failed.');
+      }
+      const predictedYield = Number(mlJson.prediction).toFixed(1);
+      
+      const resultsFromML = {
+        yieldPrediction: {
+          predicted: predictedYield,
+          confidence: 90,
+          trend: 'stable',
+          historical: [3.2, 3.8, 4.1, 4.5, 4.2, Number(predictedYield)],
+        },
+        climateAlerts: [],
+        currentWeather: { temperature: 28, humidity: 65, windSpeed: 8, uvIndex: 7 },
+        irrigation: {
+          soilMoisture: 55,
+          recommendation: "Maintain current schedule",
+          nextWatering: "Tomorrow morning",
+          efficiency: 85,
+          weeklySchedule: [],
+        },
+        diseaseDetection: { status: diseaseImage ? 'analyzed' : 'pending', result: null },
+        soilHealth: {
+          overall: 80,
+          nutrients: { nitrogen: 70, phosphorus: 65, potassium: 75},
+          recommendation: [
+            "Add organic compost to improve soil structure",
+            "Consider lime application to adjust pH",
+          ],
+        },
+      };
+      setResults(resultsFromML);
+      setActiveTab('results');
+      setLoading(false);
     } catch (err) {
       console.error(err);
       setErrors(prev => ({ ...prev, submit: 'Failed to save soil data. Please try again.' }));
-    }
-
-    // Simulate comprehensive ML analysis (client-side demo)
-    setTimeout(() => {
-      const mockResults = {
-        yieldPrediction: {
-          predicted: (Math.random() * 3 + 4).toFixed(1),
-          confidence: Math.floor(Math.random() * 15) + 85,
-          trend: Math.random() > 0.5 ? 'increasing' : 'stable',
-          historical: [3.2, 3.8, 4.1, 4.5, 4.2, 4.8].map(v => v + Math.random() * 0.5)
-        },
-        
-        climateAlerts: [
-          {
-            type: 'warning',
-            icon: '🌡️',
-            title: 'Heat Wave Alert',
-            description: 'High temperatures expected for next 5 days',
-            severity: 'moderate',
-            action: 'Increase irrigation frequency'
-          },
-          {
-            type: 'info',
-            icon: '🌧️',
-            title: 'Rainfall Forecast',
-            description: 'Light showers expected this weekend',
-            severity: 'low',
-            action: 'Reduce irrigation schedule'
-          },
-          {
-            type: 'success',
-            icon: '🌤️',
-            title: 'Optimal Conditions',
-            description: 'Perfect growing conditions for next week',
-            severity: 'low',
-            action: 'Maintain current practices'
-          }
-        ],
-        
-        currentWeather: {
-          temperature: Math.floor(Math.random() * 10) + 25,
-          humidity: Math.floor(Math.random() * 20) + 60,
-          windSpeed: Math.floor(Math.random() * 10) + 5,
-          uvIndex: Math.floor(Math.random() * 5) + 6
-        },
-        
-        irrigation: {
-          soilMoisture: Math.floor(Math.random() * 30) + 40,
-          recommendation: Math.random() > 0.6 ? 'Increase irrigation by 20%' : 'Maintain current schedule',
-          nextWatering: Math.random() > 0.5 ? 'Tomorrow morning' : 'In 2 days',
-          efficiency: Math.floor(Math.random() * 20) + 75,
-          weeklySchedule: [
-            { day: 'Mon', amount: 25, status: 'completed' },
-            { day: 'Wed', amount: 30, status: 'scheduled' },
-            { day: 'Fri', amount: 25, status: 'scheduled' },
-            { day: 'Sun', amount: 20, status: 'scheduled' }
-          ]
-        },
-        
-        diseaseDetection: {
-          status: diseaseImage ? 'analyzed' : 'pending',
-          result: diseaseImage ? {
-            disease: ['Healthy', 'Leaf Spot', 'Rust', 'Blight'][Math.floor(Math.random() * 4)],
-            confidence: Math.floor(Math.random() * 20) + 80,
-            severity: ['Low', 'Moderate', 'High'][Math.floor(Math.random() * 3)],
-            treatment: 'Apply fungicide spray every 7 days',
-            affectedArea: Math.floor(Math.random() * 15) + 5
-          } : null
-        },
-        
-        soilHealth: {
-          overall: Math.floor(Math.random() * 25) + 70,
-          nutrients: {
-            nitrogen: Math.floor(Math.random() * 30) + 65,
-            phosphorus: Math.floor(Math.random() * 35) + 60,
-            potassium: Math.floor(Math.random() * 20) + 75
-          },
-          recommendations: [
-            'Add organic compost to improve soil structure',
-            'Consider lime application to adjust pH',
-            'Implement crop rotation for better nutrient cycling'
-          ]
-        }
-      };
-      
-      setResults(mockResults);
-      setActiveTab('results');
       setLoading(false);
-    }, 3000);
+    }
   };
 
   const getSeverityColor = (severity) => {
