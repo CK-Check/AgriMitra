@@ -22,10 +22,15 @@ def create_app():
     from .routes import bp as api_bp
     app.register_blueprint(api_bp)
 
+    try:
+        from .ml.routes_ml import ml_bp
+        app.register_blueprint(ml_bp)
+    except ImportError:
+        pass
+
     @app.get("/health")
     def health():
         return {"status": "ok"}
 
     return app
-
 
